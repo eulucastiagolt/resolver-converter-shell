@@ -28,12 +28,12 @@ validate_video_file() {
     return 1
   fi
 
-  if ! ffmpeg -v error -i "$file" -f null - 2>&1 | grep -q 'Error'; then
-    return 0
-  else
-    echo "Erro: O arquivo '$file' não pôde ser processado pelo FFmpeg." >&2
-    return 1
-  fi
+  # if ! ffmpeg -v error -i "$file" -f null - 2>&1 | grep -q 'Error'; then
+  #   return 0
+  # else
+  #   echo "Erro: O arquivo '$file' não pôde ser processado pelo FFmpeg." >&2
+  #   return 1
+  # fi
 }
 check_ffmpeg
 
