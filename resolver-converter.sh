@@ -112,7 +112,14 @@ for INPUT_FILE in $ARG_INPUT; do
   fi
 
   BASENAME=$(basename -- "$INPUT_FILE")
+  # Remove only the last extension while preserving other dots in the filename
   FILE_NAME="${BASENAME%.*}"
+  # If the filename has no extension, FILE_NAME will be empty, so we use the original basename
+  [ -z "$FILE_NAME" ] && FILE_NAME="$BASENAME"
+  # Get the extension (everything after the last dot)
+  EXTENSION="${BASENAME##*.}"
+  # If the extension is the same as the filename (no extension), don't remove anything
+  [ "$EXTENSION" = "$BASENAME" ] && FILE_NAME="$BASENAME"
   OUTPUT_FILE_NAME="$FILE_NAME$CODEC_DAVINCI"
   OUTPUT_PATH="${ARG_OUTPUT%/}/$OUTPUT_FILE_NAME"
 
