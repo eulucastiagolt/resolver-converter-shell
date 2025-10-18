@@ -20,12 +20,14 @@ curl -sL https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-she
 ### Método 2: Instalação Manual
 
 1. Baixe o script:
+
     ```bash
     curl -O https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/resolver-converter.sh
     chmod +x resolver-converter.sh
     ```
 
 2. (Opcional) Instale globalmente:
+
     ```bash
     sudo mv resolver-converter.sh /usr/local/bin/resolver-converter
     ```
@@ -49,6 +51,7 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 ### Exemplos
 
 1. Converter um único arquivo:
+
     ```bash
     # Se instalado globalmente:
     resolver-converter -i video.mp4 -o ./saida
