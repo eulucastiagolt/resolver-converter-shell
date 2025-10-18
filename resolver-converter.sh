@@ -38,7 +38,7 @@ validate_video_file() {
 check_ffmpeg
 
 CODEC_DAVINCI=".mov"                                     #Codec aceito  pelo Davinci Resolvi no Linux
-PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le) #Preset do FFmpeg
+PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le -map 0:v -map 0:a) #Preset do FFmpeg
 
 show_help() {
   echo "Uso: resolver-converter [OPÇÕES]"
