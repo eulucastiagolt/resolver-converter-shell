@@ -41,7 +41,7 @@ CODEC_DAVINCI=".mov"                                     #Codec aceito  pelo Dav
 PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le) #Preset do FFmpeg
 
 show_help() {
-  echo "Uso: $0 [OPÇÕES]"
+  echo "Uso: resolver-converter [OPÇÕES]"
   echo "Converte arquivos de vídeo para o formato compatível com o DaVinci Resolve."
   echo ""
   echo "Opções:"
@@ -50,8 +50,8 @@ show_help() {
   echo "  -h, --help              Mostra esta mensagem de ajuda"
   echo ""
   echo "Exemplos:"
-  echo "  $0 -i entrada.mp4 -o ./saida"
-  echo "  $0 --input video.avi --output /caminho/para/saida"
+  echo "  resolver-converter -i entrada.mp4 -o ./saida"
+  echo "  resolver-converter --input video.avi --output /caminho/para/saida"
   exit 0
 }
 
