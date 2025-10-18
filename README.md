@@ -44,9 +44,45 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 
 | Opção          | Descrição                                  |
 | -------------- | ------------------------------------------ |
-| `-i, --input`  | Arquivo de vídeo de entrada                |
-| `-o, --output` | Diretório de saída para o vídeo convertido |
+| `-i, --input`  | Arquivo de vídeo de entrada (aceita wildcards como *.mp4) |
+| `-o, --output` | Diretório de saída para o(s) vídeo(s) convertido(s) |
 | `-h, --help`   | Mostra a mensagem de ajuda                 |
+
+### Exemplos de Uso
+
+1. **Converter um único arquivo**:
+
+   ```bash
+   resolver-converter -i "meu video.mp4" -o ./saida
+   ```
+
+2. **Converter múltiplos arquivos com wildcard**:
+
+   ```bash
+   resolver-converter -i *.mp4 -o ./videos_convertidos
+   ```
+
+3. **Arquivos com espaços no nome**:
+
+   ```bash
+   resolver-converter -i "meu video com espacos.mkv" -o ./saida
+   ```
+
+4. **Arquivos com múltiplos pontos no nome**:
+
+   ```bash
+   resolver-converter -i "video.2023.10.18.final.mp4" -o ./saida
+   ```
+
+   Será convertido para: `video.2023.10.18.final.mov`
+
+### Características
+
+- Suporte a múltiplos formatos de vídeo de entrada
+- Preserva nomes de arquivo complexos com múltiplos pontos
+- Tratamento adequado de espaços em nomes de arquivo
+- Cria automaticamente o diretório de saída se não existir
+- Feedback detalhado durante o processo de conversão
 
 ### Exemplos
 
@@ -64,7 +100,7 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 
     ```bash
     # Converter todos os arquivos .mp4 do diretório:
-    resolver-converter -i "*.mp4" -o ./saida
+    resolver-converter -i *.mp4 -o ./saida
 
     # Especificar múltiplos arquivos:
     resolver-converter -i "video1.mp4 video2.mp4 video3.mp4" -o ./saida

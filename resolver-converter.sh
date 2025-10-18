@@ -105,7 +105,7 @@ fi
 echo "================================="
 echo "Iniciando a conversão"
 
-for INPUT_FILE in $ARG_INPUT; do
+for INPUT_FILE in "$ARG_INPUT"; do
   if [ ! -f "$INPUT_FILE" ]; then
     echo "Aviso: Arquivo não encontrado ou padrão sem correspondência: $INPUT_FILE. Pulando."
     continue
