@@ -106,17 +106,11 @@ fi
 echo "================================="
 echo "Iniciando a conversão"
 
-# Process each file matching the pattern
-echo "================================="
-echo "Iniciando a conversão"
-
-# Enable extended pattern matching
-shopt -s nullglob
-
-# Process each input file that matches the pattern
-for INPUT_FILE in $ARG_INPUT; do
-  # Skip if not a regular file
-  [ ! -f "$INPUT_FILE" ] && continue
+for INPUT_FILE in "$ARG_INPUT"; do
+  if [ ! -f "$INPUT_FILE" ]; then
+    echo "Aviso: Arquivo não encontrado ou padrão sem correspondência: $INPUT_FILE. Pulando."
+    continue
+  fi
 
   BASENAME=$(basename -- "$INPUT_FILE")
   # Remove only the last extension while preserving other dots in the filename
