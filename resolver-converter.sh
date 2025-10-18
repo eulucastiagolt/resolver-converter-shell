@@ -55,34 +55,35 @@ show_help() {
   exit 0
 }
 
+# Process arguments
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-  -i | --input)
-    if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
-      ARG_INPUT="$2"
-      shift 2
-    else
-      echo "Erro: $1 requer um argumento (Arquivo de entrada)." >&2
+    -i | --input)
+      if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+        ARG_INPUT="$2"
+        shift 2
+      else
+        echo "Erro: $1 requer um argumento (Arquivo de entrada)." >&2
+        exit 1
+      fi
+      ;;
+    -o | --output)
+      if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+        ARG_OUTPUT="$2"
+        shift 2
+      else
+        echo "Erro: $1 requer um argumento (Diretório de saída)." >&2
+        exit 1
+      fi
+      ;;
+    -h | --help)
+      show_help
+      ;;
+    *)
+      echo "Erro: Opção inválida: $1" >&2
+      echo "Use -h ou --help para ver as opções disponíveis." >&2
       exit 1
-    fi
-    ;;
-  -o | --output)
-    if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
-      ARG_OUTPUT="$2"
-      shift 2
-    else
-      echo "Erro: $1 requer um argumento (Diretório de saída)." >&2
-      exit 1
-    fi
-    ;;
-  -h | --help)
-    show_help
-    ;;
-  *)
-    echo "Erro: Opção inválida: $1" >&2
-    echo "Use -h ou --help para ver as opções disponíveis." >&2
-    exit 1
-    ;;
+      ;;
   esac
 done
 
@@ -92,12 +93,12 @@ if [ -z "$ARG_INPUT" ] || [ -z "$ARG_OUTPUT" ]; then
   exit 1
 fi
 
-if [ -d "$ARG_OUTPUT" ]; then
-  echo "Diretório de saída existe"
-else
+# Create output directory if it doesn't exist
+if [ ! -d "$ARG_OUTPUT" ]; then
   echo "Diretório de saída não existe. Criando diretório..."
   if ! mkdir -p "$ARG_OUTPUT"; then
     echo "Erro: Falha ao criar o diretório $ARG_OUTPUT" >&2
+    exit 1
   fi
   echo "Diretório criado"
 fi
@@ -105,11 +106,17 @@ fi
 echo "================================="
 echo "Iniciando a conversão"
 
+# Process each file matching the pattern
+echo "================================="
+echo "Iniciando a conversão"
+
+# Enable extended pattern matching
+shopt -s nullglob
+
+# Process each input file that matches the pattern
 for INPUT_FILE in $ARG_INPUT; do
-  if [ ! -f "$INPUT_FILE" ]; then
-    echo "Aviso: Arquivo não encontrado ou padrão sem correspondência: $INPUT_FILE. Pulando."
-    continue
-  fi
+  # Skip if not a regular file
+  [ ! -f "$INPUT_FILE" ] && continue
 
   BASENAME=$(basename -- "$INPUT_FILE")
   # Remove only the last extension while preserving other dots in the filename
@@ -141,7 +148,16 @@ for INPUT_FILE in $ARG_INPUT; do
   else
     echo "Erro: A conversão de $INPUT_FILE falhou. Verifique as mensagens do FFmpeg." >&2
   fi
-
 done
+
+# Restore nullglob to default
+shopt -u nullglob
+
+# If no files were processed
+if [ "$ARG_INPUT" != "" ] && [ -z "$INPUT_FILE" ]; then
+  echo "Aviso: Nenhum arquivo encontrado correspondente ao padrão: $ARG_INPUT" >&2
+  exit 1
+fi
+
 
 exit 0
