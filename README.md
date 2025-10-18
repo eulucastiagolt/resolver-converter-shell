@@ -9,54 +9,72 @@ Ferramenta de linha de comando para conversão de vídeos para o formato compat�
 
 ## 🚀 Instalação
 
-### Linux
+### Método 1: Instalação Rápida (Recomendado)
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/resolver-converter.git
-   cd resolver-converter
-   ```
+Execute o comando abaixo para instalar ou atualizar:
 
-2. Torne o script executável:
-   ```bash
-   chmod +x resolver-converter.sh
-   ```
+```bash
+curl -sL https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/install.sh | bash
+```
 
-3. (Opcional) Mova para um diretório no PATH para uso global:
-   ```bash
-   sudo mv resolver-converter.sh /usr/local/bin/resolver-converter
-   ```
+### Método 2: Instalação Manual
+
+1. Baixe o script:
+    ```bash
+    curl -O https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/resolver-converter.sh
+    chmod +x resolver-converter.sh
+    ```
+
+2. (Opcional) Instale globalmente:
+    ```bash
+    sudo mv resolver-converter.sh /usr/local/bin/resolver-converter
+    ```
 
 ## 🛠 Como Usar
 
 ### Sintaxe Básica
+
 ```bash
-./resolver-converter.sh -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
+resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 ```
 
 ### Opções
+
 | Opção          | Descrição                                  |
-|----------------|-------------------------------------------|
-| `-i, --input`  | Arquivo de vídeo de entrada               |
-| `-o, --output` | Diretório de saída para o vídeo convertido|
-| `-h, --help`   | Mostra a mensagem de ajuda                |
+| -------------- | ------------------------------------------ |
+| `-i, --input`  | Arquivo de vídeo de entrada                |
+| `-o, --output` | Diretório de saída para o vídeo convertido |
+| `-h, --help`   | Mostra a mensagem de ajuda                 |
 
 ### Exemplos
 
 1. Converter um único arquivo:
-   ```bash
-   ./resolver-converter.sh -i video.mp4 -o ./saida
-   ```
+    ```bash
+    # Se instalado globalmente:
+    resolver-converter -i video.mp4 -o ./saida
 
-2. Usar caminhos absolutos:
-   ```bash
-   ./resolver-converter.sh --input /caminho/do/video.avi --output /caminho/da/saida
-   ```
+    # Se estiver usando localmente:
+    ./resolver-converter.sh -i video.mp4 -o ./saida
+    ```
 
-3. Se instalado globalmente:
-   ```bash
-   resolver-converter -i entrada.mkv -o ./videos_convertidos
-   ```
+2. Converter todos os arquivos de um diretório:
+
+    ```bash
+    # Converter todos os arquivos .mp4 do diretório:
+    resolver-converter -i "*.mp4" -o ./saida
+
+    # Especificar múltiplos arquivos:
+    resolver-converter -i "video1.mp4 video2.mp4 video3.mp4" -o ./saida
+
+    # Usar curinga em subdiretórios:
+    resolver-converter -i "./**/*.mp4" -o ./saida
+    ```
+
+3. Usar caminhos absolutos:
+
+    ```bash
+    resolver-converter --input /caminho/do/video.avi --output /caminho/da/saida
+    ```
 
 ## 🔄 Formatos Suportados
 
@@ -65,8 +83,9 @@ O script usa o FFmpeg para conversão, então qualquer formato de vídeo suporta
 ## ❓ Ajuda
 
 Para ver todas as opções disponíveis:
+
 ```bash
-./resolver-converter.sh --help
+resolver-converter --help
 ```
 
 ## 📝 Notas
@@ -80,4 +99,4 @@ Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICEN
 
 ---
 
-Desenvolvido por [Seu Nome](https://github.com/seu-usuario) | [www.seusite.com](https://www.seusite.com)
+Desenvolvido por [Lucas Tiago](https://github.com/eulucastiagolt) | [www.lucastiago.com.br](https://www.lucastiago.com.br)
