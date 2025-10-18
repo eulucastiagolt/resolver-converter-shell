@@ -46,6 +46,7 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 | -------------- | ------------------------------------------ |
 | `-i, --input`  | Arquivo de vídeo de entrada (aceita wildcards como *.mp4) |
 | `-o, --output` | Diretório de saída para o(s) vídeo(s) convertido(s) |
+| `-m, --map-audio` | Mapeia faixas de áudio específicas (ex: 1,3,5) |
 | `-h, --help`   | Mostra a mensagem de ajuda                 |
 
 ### Exemplos de Uso
@@ -62,13 +63,21 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
    resolver-converter -i *.mp4 -o ./videos_convertidos
    ```
 
-3. **Arquivos com espaços no nome**:
+3. **Selecionar faixas de áudio específicas**:
+
+   ```bash
+   resolver-converter -i video.mp4 -o ./saida -m 1,3
+   ```
+
+   Este comando irá incluir apenas as faixas de áudio 1 e 3 no arquivo de saída.
+
+4. **Arquivos com espaços no nome**:
 
    ```bash
    resolver-converter -i "meu video com espacos.mkv" -o ./saida
    ```
 
-4. **Arquivos com múltiplos pontos no nome**:
+5. **Arquivos com múltiplos pontos no nome**:
 
    ```bash
    resolver-converter -i "video.2023.10.18.final.mp4" -o ./saida
@@ -83,6 +92,9 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 - Tratamento adequado de espaços em nomes de arquivo
 - Cria automaticamente o diretório de saída se não existir
 - Feedback detalhado durante o processo de conversão
+- Suporte a seleção de faixas de áudio específicas
+- Verificação automática de dependências (FFmpeg)
+- Instalação global simplificada
 
 ### Exemplos
 

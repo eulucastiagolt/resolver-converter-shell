@@ -37,7 +37,7 @@ validate_video_file() {
 }
 check_ffmpeg
 
-CODEC_DAVINCI=".mov"                                     #Codec aceito  pelo Davinci Resolvi no Linux
+CODEC_DAVINCI=".mov"                                                       #Codec aceito  pelo Davinci Resolvi no Linux
 PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le -map 0:v -map 0:a) #Preset do FFmpeg
 
 show_help() {
@@ -58,32 +58,41 @@ show_help() {
 # Process arguments
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-    -i | --input)
-      if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
-        ARG_INPUT="$2"
-        shift 2
-      else
-        echo "Erro: $1 requer um argumento (Arquivo de entrada)." >&2
-        exit 1
-      fi
-      ;;
-    -o | --output)
-      if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
-        ARG_OUTPUT="$2"
-        shift 2
-      else
-        echo "Erro: $1 requer um argumento (Diretório de saída)." >&2
-        exit 1
-      fi
-      ;;
-    -h | --help)
-      show_help
-      ;;
-    *)
-      echo "Erro: Opção inválida: $1" >&2
-      echo "Use -h ou --help para ver as opções disponíveis." >&2
+  -i | --input)
+    if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+      ARG_INPUT="$2"
+      shift 2
+    else
+      echo "Erro: $1 requer um argumento (Arquivo de entrada)." >&2
       exit 1
-      ;;
+    fi
+    ;;
+  -o | --output)
+    if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+      ARG_OUTPUT="$2"
+      shift 2
+    else
+      echo "Erro: $1 requer um argumento (Diretório de saída)." >&2
+      exit 1
+    fi
+    ;;
+  -m | --map-audio)
+    if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+      ARG_MAP_AUDIO="$2"
+      shift 2
+    else
+      echo "Erro: $1 requer uma sequência de índices de áudio separado por vírgula (ex: 1,5,3)." >&2
+      exit 1
+    fi
+    ;;
+  -h | --help)
+    show_help
+    ;;
+  *)
+    echo "Erro: Opção inválida: $1" >&2
+    echo "Use -h ou --help para ver as opções disponíveis." >&2
+    exit 1
+    ;;
   esac
 done
 
@@ -137,7 +146,23 @@ for INPUT_FILE in "$ARG_INPUT"; do
     continue
   fi
 
-  if ffmpeg -i "$INPUT_FILE" "${PRESET_FFMPEG[@]}" "$OUTPUT_PATH"; then
+   local BASE_PRESET=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le)
+  local FFMPEG_COMMAND=("ffmpeg" "-i" "$INPUT_FILE")
+
+  if [ -n "$ARG_MAP_AUDIO" ]; then
+    FFMPEG_COMMAND+=("-map" "0:v:0")
+    IFS=',' read -r -a AUDIO_TRACKS <<< "$ARG_MAP_AUDIO"
+    for track_index in "${AUDIO_TRACKS[@]}"; do
+      FFMPEG_COMMAND+=("-map" "0:${track_index}")
+    done
+  else
+    FFMPEG_COMMAND+=("-map" "0:v" "-map" "0:a")
+  fi
+
+  FFMPEG_COMMAND+=("${BASE_PRESET[@]}")
+  FFMPEG_COMMAND+=("$OUTPUT_PATH")
+
+  if "${FFMPEG_COMMAND[@]}"; then
     echo "Conversão de $INPUT_FILE concluída com sucesso!"
   else
     echo "Erro: A conversão de $INPUT_FILE falhou. Verifique as mensagens do FFmpeg." >&2
@@ -152,6 +177,5 @@ if [ "$ARG_INPUT" != "" ] && [ -z "$INPUT_FILE" ]; then
   echo "Aviso: Nenhum arquivo encontrado correspondente ao padrão: $ARG_INPUT" >&2
   exit 1
 fi
-
 
 exit 0
