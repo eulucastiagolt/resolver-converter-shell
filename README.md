@@ -1,153 +1,153 @@
 # Resolver Converter
 
-Ferramenta de linha de comando para conversão de vídeos para o formato compatível com o DaVinci Resolve.
+Command-line tool for converting videos to DaVinci Resolve compatible format, designed to solve video compatibility issues when using DaVinci Resolve on Linux systems.
 
-## 📋 Requisitos
+## 📋 Requirements
 
-- Bash (GNU Bash 4.0 ou superior)
-- FFmpeg (para conversão de vídeo)
+- Bash (GNU Bash 4.0 or higher)
+- FFmpeg (for video conversion)
 
-## 🚀 Instalação
+## 🚀 Installation
 
-### Método 1: Instalação Rápida (Recomendado)
+### Method 1: Quick Install (Recommended)
 
-Execute o comando abaixo para instalar ou atualizar:
+Run the following command to install or update:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/install.sh | bash
 ```
 
-### Método 2: Instalação Manual
+### Method 2: Manual Installation
 
-1. Baixe o script:
+1. Download the script:
 
     ```bash
     curl -O https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/resolver-converter.sh
     chmod +x resolver-converter.sh
     ```
 
-2. (Opcional) Instale globalmente:
+2. (Optional) Install globally:
 
     ```bash
     sudo mv resolver-converter.sh /usr/local/bin/resolver-converter
     ```
 
-## 🛠 Como Usar
+## 🛠 How to Use
 
-### Sintaxe Básica
+### Basic Syntax
 
 ```bash
-resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
+resolver-converter -i INPUT_FILE -o OUTPUT_DIRECTORY
 ```
 
-### Opções
+### Options
 
-| Opção          | Descrição                                  |
-| -------------- | ------------------------------------------ |
-| `-i, --input`  | Arquivo de vídeo de entrada (aceita wildcards como *.mp4) |
-| `-o, --output` | Diretório de saída para o(s) vídeo(s) convertido(s) |
-| `-m, --map-audio` | Mapeia faixas de áudio específicas (ex: 1,3,5) |
-| `-h, --help`   | Mostra a mensagem de ajuda                 |
+| Option          | Description                                  |
+| --------------- | -------------------------------------------- |
+| `-i, --input`   | Input video file (supports wildcards like *.mp4) |
+| `-o, --output`  | Output directory for converted video(s)      |
+| `-m, --map-audio` | Map specific audio tracks (e.g., 1,3,5)      |
+| `-h, --help`    | Show help message                           |
 
-### Exemplos de Uso
+### Usage Examples
 
-1. **Converter um único arquivo**:
-
-   ```bash
-   resolver-converter -i "meu video.mp4" -o ./saida
-   ```
-
-2. **Converter múltiplos arquivos com wildcard**:
+1. **Convert a single file**:
 
    ```bash
-   resolver-converter -i *.mp4 -o ./videos_convertidos
+   resolver-converter -i "my video.mp4" -o ./output
    ```
 
-3. **Selecionar faixas de áudio específicas**:
+2. **Convert multiple files using wildcard**:
 
    ```bash
-   resolver-converter -i video.mp4 -o ./saida -m 1,3
+   resolver-converter -i *.mp4 -o ./converted_videos
    ```
 
-   Este comando irá incluir apenas as faixas de áudio 1 e 3 no arquivo de saída.
-
-4. **Arquivos com espaços no nome**:
+3. **Select specific audio tracks**:
 
    ```bash
-   resolver-converter -i "meu video com espacos.mkv" -o ./saida
+   resolver-converter -i video.mp4 -o ./output -m 1,3
    ```
 
-5. **Arquivos com múltiplos pontos no nome**:
+   This command will include only audio tracks 1 and 3 in the output file.
+
+4. **Files with spaces in the name**:
 
    ```bash
-   resolver-converter -i "video.2023.10.18.final.mp4" -o ./saida
+   resolver-converter -i "my video with spaces.mkv" -o ./output
    ```
 
-   Será convertido para: `video.2023.10.18.final.mov`
+5. **Files with multiple dots in the name**:
 
-### Características
+   ```bash
+   resolver-converter -i "video.2023.10.18.final.mp4" -o ./output
+   ```
 
-- Suporte a múltiplos formatos de vídeo de entrada
-- Preserva nomes de arquivo complexos com múltiplos pontos
-- Tratamento adequado de espaços em nomes de arquivo
-- Cria automaticamente o diretório de saída se não existir
-- Feedback detalhado durante o processo de conversão
-- Suporte a seleção de faixas de áudio específicas
-- Verificação automática de dependências (FFmpeg)
-- Instalação global simplificada
+   Will be converted to: `video.2023.10.18.final.mov`
 
-### Exemplos
+### Features
 
-1. Converter um único arquivo:
+- Supports multiple input video formats
+- Preserves complex filenames with multiple dots
+- Handles spaces in filenames correctly
+- Automatically creates output directory if it doesn't exist
+- Detailed feedback during conversion process
+- Supports selection of specific audio tracks
+- Automatic dependency check (FFmpeg)
+- Simplified global installation
+
+### More Examples
+
+1. Convert a single file:
 
     ```bash
-    # Se instalado globalmente:
-    resolver-converter -i video.mp4 -o ./saida
+    # If installed globally:
+    resolver-converter -i video.mp4 -o ./output
 
-    # Se estiver usando localmente:
-    ./resolver-converter.sh -i video.mp4 -o ./saida
+    # If using locally:
+    ./resolver-converter.sh -i video.mp4 -o ./output
     ```
 
-2. Converter todos os arquivos de um diretório:
+2. Convert all files in a directory:
 
     ```bash
-    # Converter todos os arquivos .mp4 do diretório:
-    resolver-converter -i *.mp4 -o ./saida
+    # Convert all .mp4 files in the directory:
+    resolver-converter -i *.mp4 -o ./output
 
-    # Especificar múltiplos arquivos:
-    resolver-converter -i "video1.mp4 video2.mp4 video3.mp4" -o ./saida
+    # Specify multiple files:
+    resolver-converter -i "video1.mp4 video2.mp4 video3.mp4" -o ./output
 
-    # Usar curinga em subdiretórios:
-    resolver-converter -i "./**/*.mp4" -o ./saida
+    # Use wildcards in subdirectories:
+    resolver-converter -i "./**/*.mp4" -o ./output
     ```
 
-3. Usar caminhos absolutos:
+3. Use absolute paths:
 
     ```bash
-    resolver-converter --input /caminho/do/video.avi --output /caminho/da/saida
+    resolver-converter --input /path/to/video.avi --output /path/to/output
     ```
 
-## 🔄 Formatos Suportados
+## 🔄 Supported Formats
 
-O script usa o FFmpeg para conversão, então qualquer formato de vídeo suportado pelo FFmpeg pode ser usado como entrada. A saída será no formato `.mov` com codec MPEG-4 e áudio PCM, que é amplamente compatível com o DaVinci Resolve.
+The script uses FFmpeg for conversion, so any video format supported by FFmpeg can be used as input. The output will be in `.mov` format with MPEG-4 codec and PCM audio, which is widely compatible with DaVinci Resolve.
 
-## ❓ Ajuda
+## ❓ Help
 
-Para ver todas as opções disponíveis:
+To see all available options:
 
 ```bash
 resolver-converter --help
 ```
 
-## 📝 Notas
+## 📝 Notes
 
-- O script criará automaticamente o diretório de saída se ele não existir.
-- Se ocorrer algum erro durante a conversão, uma mensagem será exibida indicando o problema.
+- The script will automatically create the output directory if it doesn't exist.
+- If any error occurs during conversion, an error message will be displayed.
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-Desenvolvido por [Lucas Tiago](https://github.com/eulucastiagolt) | [www.lucastiago.com.br](https://www.lucastiago.com.br)
+Developed by [Lucas Tiago](https://github.com/eulucastiagolt) | [www.lucastiago.com.br](https://www.lucastiago.com.br)

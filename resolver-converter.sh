@@ -1,16 +1,16 @@
 #!/bin/bash
 #By Lucas Tiago www.lucastiago.com.br
-#Versão 0.2
-#Script que converte arquivos de vídeo para o formato suportado no Davinci Resolve.
-#É necessário FFmpeg para funcionar.
+#Version 0.2
+#Script to convert video files to DaVinci Resolve compatible format.
+#FFmpeg is required for this script to work.
 
 check_ffmpeg() {
   if ! command -v ffmpeg &>/dev/null; then
-    echo "Erro: FFmpeg não está instalado ou não está no PATH." >&2
-    echo "Por favor, instale o FFmpeg antes de continuar." >&2
-    echo "No Ubuntu/Debian: sudo apt install ffmpeg" >&2
-    echo "No Fedora: sudo dnf install ffmpeg" >&2
-    echo "No Arch Linux: sudo pacman -S ffmpeg" >&2
+    echo "Error: FFmpeg is not installed or not in PATH." >&2
+    echo "Please install FFmpeg before continuing." >&2
+    echo "On Ubuntu/Debian: sudo apt install ffmpeg" >&2
+    echo "On Fedora: sudo dnf install ffmpeg" >&2
+    echo "On Arch Linux: sudo pacman -S ffmpeg" >&2
     exit 1
   fi
 }
@@ -19,39 +19,39 @@ validate_video_file() {
   local file="$1"
 
   if [ ! -f "$file" ]; then
-    echo "Erro: O arquivo '$file' não existe." >&2
+    echo "Error: The file '$file' does not exist." >&2
     return 1
   fi
 
   if ! file --mime-type "$file" | grep -q video/; then
-    echo "Erro: O arquivo '$file' não parece ser um vídeo suportado." >&2
+    echo "Error: The file '$file' does not appear to be a supported video file." >&2
     return 1
   fi
 
   # if ! ffmpeg -v error -i "$file" -f null - 2>&1 | grep -q 'Error'; then
   #   return 0
   # else
-  #   echo "Erro: O arquivo '$file' não pôde ser processado pelo FFmpeg." >&2
+  #   echo "Error: FFmpeg could not process the file '$file'." >&2
   #   return 1
   # fi
 }
 check_ffmpeg
 
-CODEC_DAVINCI=".mov"                                                       #Codec aceito  pelo Davinci Resolvi no Linux
-PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le -map 0:v -map 0:a) #Preset do FFmpeg
+CODEC_DAVINCI=".mov"                                                       #Codec accepted by DaVinci Resolve on Linux
+PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le -map 0:v -map 0:a) #FFmpeg preset
 
 show_help() {
-  echo "Uso: resolver-converter [OPÇÕES]"
-  echo "Converte arquivos de vídeo para o formato compatível com o DaVinci Resolve."
+  echo "Usage: resolver-converter [OPTIONS]"
+  echo "Convert video files to DaVinci Resolve compatible format."
   echo ""
-  echo "Opções:"
-  echo "  -i, --input ARQUIVO     Arquivo de vídeo de entrada"
-  echo "  -o, --output DIRETÓRIO  Diretório de saída para o arquivo convertido"
-  echo "  -h, --help              Mostra esta mensagem de ajuda"
+  echo "Options:"
+  echo "  -i, --input FILE        Input video file"
+  echo "  -o, --output DIRECTORY  Output directory for converted file"
+  echo "  -h, --help              Show this help message"
   echo ""
-  echo "Exemplos:"
-  echo "  resolver-converter -i entrada.mp4 -o ./saida"
-  echo "  resolver-converter --input video.avi --output /caminho/para/saida"
+  echo "Examples:"
+  echo "  resolver-converter -i input.mp4 -o ./output"
+  echo "  resolver-converter --input video.avi --output /path/to/output"
   exit 0
 }
 
@@ -63,7 +63,7 @@ while [[ "$#" -gt 0 ]]; do
       ARG_INPUT="$2"
       shift 2
     else
-      echo "Erro: $1 requer um argumento (Arquivo de entrada)." >&2
+      echo "Error: $1 requires an argument (Input file)." >&2
       exit 1
     fi
     ;;
@@ -72,7 +72,7 @@ while [[ "$#" -gt 0 ]]; do
       ARG_OUTPUT="$2"
       shift 2
     else
-      echo "Erro: $1 requer um argumento (Diretório de saída)." >&2
+      echo "Error: $1 requires an argument (Output directory)." >&2
       exit 1
     fi
     ;;
@@ -81,7 +81,7 @@ while [[ "$#" -gt 0 ]]; do
       ARG_MAP_AUDIO="$2"
       shift 2
     else
-      echo "Erro: $1 requer uma sequência de índices de áudio separado por vírgula (ex: 1,5,3)." >&2
+      echo "Error: $1 requires a comma-separated list of audio track indices (e.g., 1,5,3)." >&2
       exit 1
     fi
     ;;
@@ -89,35 +89,35 @@ while [[ "$#" -gt 0 ]]; do
     show_help
     ;;
   *)
-    echo "Erro: Opção inválida: $1" >&2
-    echo "Use -h ou --help para ver as opções disponíveis." >&2
+    echo "Error: Invalid option: $1" >&2
+    echo "Use -h or --help to see available options." >&2
     exit 1
     ;;
   esac
 done
 
 if [ -z "$ARG_INPUT" ] || [ -z "$ARG_OUTPUT" ]; then
-  echo "Erro: Argumentos insuficientes." >&2
-  echo "Use -h ou --help para ver o modo de uso." >&2
+  echo "Error: Insufficient arguments." >&2
+  echo "Use -h or --help to see usage." >&2
   exit 1
 fi
 
 # Create output directory if it doesn't exist
 if [ ! -d "$ARG_OUTPUT" ]; then
-  echo "Diretório de saída não existe. Criando diretório..."
+  echo "Output directory does not exist. Creating directory..."
   if ! mkdir -p "$ARG_OUTPUT"; then
-    echo "Erro: Falha ao criar o diretório $ARG_OUTPUT" >&2
+    echo "Error: Failed to create directory $ARG_OUTPUT" >&2
     exit 1
   fi
-  echo "Diretório criado"
+  echo "Directory created"
 fi
 
 echo "================================="
-echo "Iniciando a conversão"
+echo "Starting conversion"
 
 for INPUT_FILE in "$ARG_INPUT"; do
   if [ ! -f "$INPUT_FILE" ]; then
-    echo "Aviso: Arquivo não encontrado ou padrão sem correspondência: $INPUT_FILE. Pulando."
+    echo "Warning: File not found or pattern did not match: $INPUT_FILE. Skipping."
     continue
   fi
 
@@ -134,15 +134,15 @@ for INPUT_FILE in "$ARG_INPUT"; do
   OUTPUT_PATH="${ARG_OUTPUT%/}/$OUTPUT_FILE_NAME"
 
   echo ""
-  echo "--- Processando: $INPUT_FILE ---"
-  echo "Diretório de destino: ${ARG_OUTPUT%/}"
-  echo "Arquivo de saída: $OUTPUT_FILE_NAME"
-  echo "Caminho completo: $OUTPUT_PATH"
+  echo "--- Processing: $INPUT_FILE ---"
+  echo "Output directory: ${ARG_OUTPUT%/}"
+  echo "Output file: $OUTPUT_FILE_NAME"
+  echo "Full path: $OUTPUT_PATH"
 
-  # Validar o arquivo de vídeo
-  echo "Validando arquivo de vídeo..."
+  # Validate video file
+  echo "Validating video file..."
   if ! validate_video_file "$INPUT_FILE"; then
-    echo "Aviso: Pulando arquivo inválido: $INPUT_FILE" >&2
+    echo "Warning: Skipping invalid file: $INPUT_FILE" >&2
     continue
   fi
 
@@ -163,9 +163,9 @@ for INPUT_FILE in "$ARG_INPUT"; do
   FFMPEG_COMMAND+=("$OUTPUT_PATH")
 
   if "${FFMPEG_COMMAND[@]}"; then
-    echo "Conversão de $INPUT_FILE concluída com sucesso!"
+    echo "Conversion of $INPUT_FILE completed successfully!"
   else
-    echo "Erro: A conversão de $INPUT_FILE falhou. Verifique as mensagens do FFmpeg." >&2
+    echo "Error: Conversion of $INPUT_FILE failed. Check FFmpeg messages for details." >&2
   fi
 done
 
@@ -174,7 +174,7 @@ shopt -u nullglob
 
 # If no files were processed
 if [ "$ARG_INPUT" != "" ] && [ -z "$INPUT_FILE" ]; then
-  echo "Aviso: Nenhum arquivo encontrado correspondente ao padrão: $ARG_INPUT" >&2
+  echo "Warning: No files found matching pattern: $ARG_INPUT" >&2
   exit 1
 fi
 
