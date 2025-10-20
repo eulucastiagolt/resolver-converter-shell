@@ -1,6 +1,6 @@
 # Resolver Converter
 
-[![Static Badge](https://img.shields.io/badge/lang%20-%20pt--br%20-%20%23327335?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%2349A84D)](https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.pt-br.md)
+[![en](https://img.shields.io/badge/lang%20-%20en%20-%20%23651215?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%23F54B3E)](https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.md)
 
 Ferramenta de linha de comando para conversão de vídeos para o formato compatível com o DaVinci Resolve, projetada para resolver problemas de compatibilidade de vídeo ao usar o DaVinci Resolve em sistemas Linux.
 
