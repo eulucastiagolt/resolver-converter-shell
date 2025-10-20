@@ -1,6 +1,6 @@
 # Resolver Converter
 
-<a href="https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.md"><img alt="Static Badge" src="https://img.shields.io/badge/lang%20-%20en%20-%20%23651215?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%23F54B3E"></a> <a href="https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.pt-br.md"><img alt="Static Badge" src="https://img.shields.io/badge/lang%20-%20pt--br%20-%20%23327335?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%2349A84D"></a>
+[![en](https://img.shields.io/badge/lang%20-%20en%20-%20%23651215?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%23F54B3E)](https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.md) [![pt-br](https://img.shields.io/badge/lang%20-%20pt--br%20-%20%23327335?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%2349A84D)](https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.pt-br.md)
 
 Command-line tool for converting videos to DaVinci Resolve compatible format, designed to solve video compatibility issues when using DaVinci Resolve on Linux systems.
 
