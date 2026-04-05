@@ -1,6 +1,6 @@
 #!/bin/bash
 #By Lucas Tiago www.lucastiago.com.br
-#Version 0.5
+#Version 0.6
 #Script to convert video files to DaVinci Resolve compatible format.
 #FFmpeg is required for this script to work.
 
@@ -146,15 +146,17 @@ shopt -s nullglob
 if [ -n "$ARG_RECURSIVE" ]; then
   shopt -s globstar
   if [[ "$ARG_INPUT" == */* ]]; then
-    BASE_DIR="${ARG_INPUT%/*}"
+    BASE_INPUT_DIR="${ARG_INPUT%/*}"
     PATTERN="${ARG_INPUT##*/}"
-    ESCAPED_BASE="${BASE_DIR// /\\ }"
+    ESCAPED_BASE="${BASE_INPUT_DIR// /\\ }"
     ESCAPED_PATTERN="${PATTERN// /\\ }"
     ESCAPED_INPUT="$ESCAPED_BASE/**/$ESCAPED_PATTERN"
   else
+    BASE_INPUT_DIR="."
     ESCAPED_INPUT="**/${ARG_INPUT// /\\ }"
   fi
 else
+  BASE_INPUT_DIR="."
   ESCAPED_INPUT="${ARG_INPUT// /\\ }"
 fi
 eval "for f in $ESCAPED_INPUT; do [ -f \"\$f\" ] && INPUT_FILES+=(\"\$f\"); done"
@@ -181,8 +183,8 @@ for INPUT_FILE in "${INPUT_FILES[@]}"; do
 
   if [ -n "$ARG_RECURSIVE" ]; then
     INPUT_DIR=$(dirname -- "$INPUT_FILE")
-    RELATIVE_DIR="${INPUT_DIR#./}"
-    if [ -n "$RELATIVE_DIR" ] && [ "$RELATIVE_DIR" != "." ]; then
+    RELATIVE_DIR="${INPUT_DIR#$BASE_INPUT_DIR/}"
+    if [ -n "$RELATIVE_DIR" ] && [ "$RELATIVE_DIR" != "$INPUT_DIR" ]; then
       CURRENT_OUTPUT_DIR="${ARG_OUTPUT%/}/$RELATIVE_DIR"
     else
       CURRENT_OUTPUT_DIR="${ARG_OUTPUT%/}"
