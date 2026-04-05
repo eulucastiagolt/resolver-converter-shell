@@ -48,6 +48,7 @@ resolver-converter -i INPUT_FILE -o OUTPUT_DIRECTORY
 | --------------- | -------------------------------------------- |
 | `-i, --input`   | Input video file or pattern (supports wildcards like `*.mp4`, `*.{mp4,mkv}`) |
 | `-o, --output`  | Output directory for converted video(s)      |
+| `-r, --recursive` | Search recursively in subdirectories (preserves directory structure) |
 | `-m, --map-audio` | Map specific audio tracks (e.g., `1,3,5`)    |
 | `-h, --help`    | Show help message                           |
 
@@ -79,7 +80,17 @@ resolver-converter -i INPUT_FILE -o OUTPUT_DIRECTORY
    resolver-converter -i "*.mp4 *.mkv" -o ./output
    ```
 
-4. **Select specific audio tracks**:
+4. **Convert files recursively in subdirectories**:
+
+   ```bash
+   # Search all .mkv files in current directory and subdirectories
+   # Preserves directory structure in output
+   resolver-converter -r -i "*.mkv" -o ./output
+   
+   # Example: ./videos/subdir/video.mkv -> ./output/videos/subdir/video.mov
+   ```
+
+5. **Select specific audio tracks**:
 
    ```bash
    resolver-converter -i video.mp4 -o ./output -m 1,3

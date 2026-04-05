@@ -1,6 +1,6 @@
 #!/bin/bash
 #By Lucas Tiago www.lucastiago.com.br
-#Version 0.3
+#Version 0.4
 #Script to convert video files to DaVinci Resolve compatible format.
 #FFmpeg is required for this script to work.
 
@@ -47,12 +47,14 @@ show_help() {
   echo "Options:"
   echo "  -i, --input PATTERN     Input video file or pattern (e.g., *.mp4, *.mkv)"
   echo "  -o, --output DIRECTORY  Output directory for converted file"
+  echo "  -r, --recursive         Search recursively in subdirectories"
   echo "  -m, --map-audio TRACKS  Map specific audio tracks (comma-separated, e.g., 1,3,5)"
   echo "  -h, --help              Show this help message"
   echo ""
   echo "Examples:"
   echo "  resolver-converter -i input.mp4 -o ./output"
   echo "  resolver-converter -i \"*.mp4\" -o ./output"
+  echo "  resolver-converter -r -i \"*.mkv\" -o ./output"
   echo "  resolver-converter -i \"video.*.mkv\" -o ./output"
   echo "  resolver-converter -i video.avi -o /path/to/output -m 1,3"
   exit 0
@@ -88,6 +90,10 @@ while [[ "$#" -gt 0 ]]; do
       exit 1
     fi
     ;;
+  -r | --recursive)
+    ARG_RECURSIVE=1
+    shift
+    ;;
   -h | --help)
     show_help
     ;;
@@ -121,9 +127,15 @@ echo "Starting conversion"
 INPUT_FILES=()
 
 shopt -s nullglob
-ESCAPED_INPUT="${ARG_INPUT// /\\ }"
+if [ -n "$ARG_RECURSIVE" ]; then
+  shopt -s globstar
+  ESCAPED_INPUT="${ARG_INPUT// /\\ }"
+  ESCAPED_INPUT="**/$ESCAPED_INPUT"
+else
+  ESCAPED_INPUT="${ARG_INPUT// /\\ }"
+fi
 eval "for f in $ESCAPED_INPUT; do [ -f \"\$f\" ] && INPUT_FILES+=(\"\$f\"); done"
-shopt -u nullglob
+shopt -u nullglob globstar
 
 if [ ${#INPUT_FILES[@]} -eq 0 ]; then
   echo "Error: No files found matching pattern: $ARG_INPUT" >&2
@@ -139,11 +151,25 @@ for INPUT_FILE in "${INPUT_FILES[@]}"; do
   EXTENSION="${BASENAME##*.}"
   [ "$EXTENSION" = "$BASENAME" ] && FILE_NAME="$BASENAME"
   OUTPUT_FILE_NAME="$FILE_NAME$CODEC_DAVINCI"
-  OUTPUT_PATH="${ARG_OUTPUT%/}/$OUTPUT_FILE_NAME"
+
+  if [ -n "$ARG_RECURSIVE" ]; then
+    INPUT_DIR=$(dirname -- "$INPUT_FILE")
+    RELATIVE_DIR="${INPUT_DIR#./}"
+    if [ -n "$RELATIVE_DIR" ] && [ "$RELATIVE_DIR" != "." ]; then
+      CURRENT_OUTPUT_DIR="${ARG_OUTPUT%/}/$RELATIVE_DIR"
+    else
+      CURRENT_OUTPUT_DIR="${ARG_OUTPUT%/}"
+    fi
+    mkdir -p "$CURRENT_OUTPUT_DIR"
+  else
+    CURRENT_OUTPUT_DIR="${ARG_OUTPUT%/}"
+  fi
+
+  OUTPUT_PATH="$CURRENT_OUTPUT_DIR/$OUTPUT_FILE_NAME"
 
   echo ""
   echo "--- Processing: $INPUT_FILE ---"
-  echo "Output directory: ${ARG_OUTPUT%/}"
+  echo "Output directory: $CURRENT_OUTPUT_DIR"
   echo "Output file: $OUTPUT_FILE_NAME"
   echo "Full path: $OUTPUT_PATH"
 
