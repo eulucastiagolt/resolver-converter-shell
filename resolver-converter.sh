@@ -1,8 +1,24 @@
 #!/bin/bash
 #By Lucas Tiago www.lucastiago.com.br
-#Version 0.4
+#Version 0.5
 #Script to convert video files to DaVinci Resolve compatible format.
 #FFmpeg is required for this script to work.
+
+CANCELLED=0
+FFMPEG_PID=0
+
+cancel_conversion() {
+  echo ""
+  echo "Cancellation requested. Stopping all conversions..."
+  CANCELLED=1
+  if [ -n "$FFMPEG_PID" ] && [ "$FFMPEG_PID" -gt 0 ]; then
+    kill "$FFMPEG_PID" 2>/dev/null
+    wait "$FFMPEG_PID" 2>/dev/null
+  fi
+  exit 1
+}
+
+trap cancel_conversion SIGINT SIGTERM
 
 check_ffmpeg() {
   if ! command -v ffmpeg &>/dev/null; then
@@ -129,8 +145,15 @@ INPUT_FILES=()
 shopt -s nullglob
 if [ -n "$ARG_RECURSIVE" ]; then
   shopt -s globstar
-  ESCAPED_INPUT="${ARG_INPUT// /\\ }"
-  ESCAPED_INPUT="**/$ESCAPED_INPUT"
+  if [[ "$ARG_INPUT" == */* ]]; then
+    BASE_DIR="${ARG_INPUT%/*}"
+    PATTERN="${ARG_INPUT##*/}"
+    ESCAPED_BASE="${BASE_DIR// /\\ }"
+    ESCAPED_PATTERN="${PATTERN// /\\ }"
+    ESCAPED_INPUT="$ESCAPED_BASE/**/$ESCAPED_PATTERN"
+  else
+    ESCAPED_INPUT="**/${ARG_INPUT// /\\ }"
+  fi
 else
   ESCAPED_INPUT="${ARG_INPUT// /\\ }"
 fi
@@ -145,6 +168,10 @@ fi
 BASE_PRESET=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le)
 
 for INPUT_FILE in "${INPUT_FILES[@]}"; do
+  if [ "$CANCELLED" -eq 1 ]; then
+    break
+  fi
+
   BASENAME=$(basename -- "$INPUT_FILE")
   FILE_NAME="${BASENAME%.*}"
   [ -z "$FILE_NAME" ] && FILE_NAME="$BASENAME"
@@ -191,14 +218,21 @@ for INPUT_FILE in "${INPUT_FILES[@]}"; do
     FFMPEG_COMMAND+=("-map" "0:v" "-map" "0:a")
   fi
 
-  FFMPEG_COMMAND+=("${BASE_PRESET[@]}")
-  FFMPEG_COMMAND+=("$OUTPUT_PATH")
+FFMPEG_COMMAND+=("${BASE_PRESET[@]}")
+FFMPEG_COMMAND+=("$OUTPUT_PATH")
 
-  if "${FFMPEG_COMMAND[@]}"; then
-    echo "Conversion of $INPUT_FILE completed successfully!"
-  else
-    echo "Error: Conversion of $INPUT_FILE failed. Check FFmpeg messages for details." >&2
-  fi
+"${FFMPEG_COMMAND[@]}" &
+FFMPEG_PID=$!
+wait "$FFMPEG_PID"
+FFMPEG_PID=0
+
+if [ "$CANCELLED" -eq 1 ]; then
+  break
+elif [ $? -eq 0 ]; then
+  echo "Conversion of $INPUT_FILE completed successfully!"
+else
+  echo "Error: Conversion of $INPUT_FILE failed. Check FFmpeg messages for details." >&2
+fi
 done
 
 exit 0
