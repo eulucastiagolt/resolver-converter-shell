@@ -1,6 +1,6 @@
 #!/bin/bash
 #By Lucas Tiago www.lucastiago.com.br
-#Version 0.2
+#Version 0.3
 #Script to convert video files to DaVinci Resolve compatible format.
 #FFmpeg is required for this script to work.
 
@@ -45,13 +45,16 @@ show_help() {
   echo "Convert video files to DaVinci Resolve compatible format."
   echo ""
   echo "Options:"
-  echo "  -i, --input FILE        Input video file"
+  echo "  -i, --input PATTERN     Input video file or pattern (e.g., *.mp4, *.mkv)"
   echo "  -o, --output DIRECTORY  Output directory for converted file"
+  echo "  -m, --map-audio TRACKS  Map specific audio tracks (comma-separated, e.g., 1,3,5)"
   echo "  -h, --help              Show this help message"
   echo ""
   echo "Examples:"
   echo "  resolver-converter -i input.mp4 -o ./output"
-  echo "  resolver-converter --input video.avi --output /path/to/output"
+  echo "  resolver-converter -i \"*.mp4\" -o ./output"
+  echo "  resolver-converter -i \"video.*.mkv\" -o ./output"
+  echo "  resolver-converter -i video.avi -o /path/to/output -m 1,3"
   exit 0
 }
 
@@ -115,20 +118,25 @@ fi
 echo "================================="
 echo "Starting conversion"
 
-for INPUT_FILE in "$ARG_INPUT"; do
-  if [ ! -f "$INPUT_FILE" ]; then
-    echo "Warning: File not found or pattern did not match: $INPUT_FILE. Skipping."
-    continue
-  fi
+INPUT_FILES=()
 
+shopt -s nullglob
+ESCAPED_INPUT="${ARG_INPUT// /\\ }"
+eval "for f in $ESCAPED_INPUT; do [ -f \"\$f\" ] && INPUT_FILES+=(\"\$f\"); done"
+shopt -u nullglob
+
+if [ ${#INPUT_FILES[@]} -eq 0 ]; then
+  echo "Error: No files found matching pattern: $ARG_INPUT" >&2
+  exit 1
+fi
+
+BASE_PRESET=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le)
+
+for INPUT_FILE in "${INPUT_FILES[@]}"; do
   BASENAME=$(basename -- "$INPUT_FILE")
-  # Remove only the last extension while preserving other dots in the filename
   FILE_NAME="${BASENAME%.*}"
-  # If the filename has no extension, FILE_NAME will be empty, so we use the original basename
   [ -z "$FILE_NAME" ] && FILE_NAME="$BASENAME"
-  # Get the extension (everything after the last dot)
   EXTENSION="${BASENAME##*.}"
-  # If the extension is the same as the filename (no extension), don't remove anything
   [ "$EXTENSION" = "$BASENAME" ] && FILE_NAME="$BASENAME"
   OUTPUT_FILE_NAME="$FILE_NAME$CODEC_DAVINCI"
   OUTPUT_PATH="${ARG_OUTPUT%/}/$OUTPUT_FILE_NAME"
@@ -139,15 +147,13 @@ for INPUT_FILE in "$ARG_INPUT"; do
   echo "Output file: $OUTPUT_FILE_NAME"
   echo "Full path: $OUTPUT_PATH"
 
-  # Validate video file
   echo "Validating video file..."
   if ! validate_video_file "$INPUT_FILE"; then
     echo "Warning: Skipping invalid file: $INPUT_FILE" >&2
     continue
   fi
 
-   local BASE_PRESET=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le)
-  local FFMPEG_COMMAND=("ffmpeg" "-i" "$INPUT_FILE")
+  FFMPEG_COMMAND=("ffmpeg" "-i" "$INPUT_FILE")
 
   if [ -n "$ARG_MAP_AUDIO" ]; then
     FFMPEG_COMMAND+=("-map" "0:v:0")
@@ -168,14 +174,5 @@ for INPUT_FILE in "$ARG_INPUT"; do
     echo "Error: Conversion of $INPUT_FILE failed. Check FFmpeg messages for details." >&2
   fi
 done
-
-# Restore nullglob to default
-shopt -u nullglob
-
-# If no files were processed
-if [ "$ARG_INPUT" != "" ] && [ -z "$INPUT_FILE" ]; then
-  echo "Warning: No files found matching pattern: $ARG_INPUT" >&2
-  exit 1
-fi
 
 exit 0

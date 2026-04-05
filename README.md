@@ -46,9 +46,9 @@ resolver-converter -i INPUT_FILE -o OUTPUT_DIRECTORY
 
 | Option          | Description                                  |
 | --------------- | -------------------------------------------- |
-| `-i, --input`   | Input video file (supports wildcards like *.mp4) |
+| `-i, --input`   | Input video file or pattern (supports wildcards like `*.mp4`, `*.{mp4,mkv}`) |
 | `-o, --output`  | Output directory for converted video(s)      |
-| `-m, --map-audio` | Map specific audio tracks (e.g., 1,3,5)      |
+| `-m, --map-audio` | Map specific audio tracks (e.g., `1,3,5`)    |
 | `-h, --help`    | Show help message                           |
 
 ### Usage Examples
@@ -62,10 +62,24 @@ resolver-converter -i INPUT_FILE -o OUTPUT_DIRECTORY
 2. **Convert multiple files using wildcard**:
 
    ```bash
+   # With quotes (script expands internally):
+   resolver-converter -i "*.mp4" -o ./converted_videos
+   
+   # Without quotes (shell expands before passing to script):
    resolver-converter -i *.mp4 -o ./converted_videos
    ```
 
-3. **Select specific audio tracks**:
+3. **Convert multiple formats with brace expansion**:
+
+   ```bash
+   # Brace expansion requires passing pattern WITHOUT quotes:
+   resolver-converter -i *.{mp4,mkv,avi} -o ./output
+   
+   # Or specify multiple patterns:
+   resolver-converter -i "*.mp4 *.mkv" -o ./output
+   ```
+
+4. **Select specific audio tracks**:
 
    ```bash
    resolver-converter -i video.mp4 -o ./output -m 1,3

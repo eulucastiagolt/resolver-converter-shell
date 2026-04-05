@@ -46,9 +46,9 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 
 | Opção          | Descrição                                  |
 | -------------- | ------------------------------------------ |
-| `-i, --input`  | Arquivo de vídeo de entrada (aceita wildcards como *.mp4) |
+| `-i, --input`  | Arquivo de vídeo ou padrão (aceita wildcards como `*.mp4`, `*.{mp4,mkv}`) |
 | `-o, --output` | Diretório de saída para o(s) vídeo(s) convertido(s) |
-| `-m, --map-audio` | Mapeia faixas de áudio específicas (ex: 1,3,5) |
+| `-m, --map-audio` | Mapeia faixas de áudio específicas (ex: `1,3,5`) |
 | `-h, --help`   | Mostra a mensagem de ajuda                 |
 
 ### Exemplos de Uso
@@ -62,10 +62,24 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 2. **Converter múltiplos arquivos com wildcard**:
 
    ```bash
+   # Com aspas (o script expande internamente):
+   resolver-converter -i "*.mp4" -o ./videos_convertidos
+   
+   # Sem aspas (o shell expande antes de passar ao script):
    resolver-converter -i *.mp4 -o ./videos_convertidos
    ```
 
-3. **Selecionar faixas de áudio específicas**:
+3. **Converter múltiplos formatos com brace expansion**:
+
+   ```bash
+   # Brace expansion requer que o padrão seja passado SEM aspas:
+   resolver-converter -i *.{mp4,mkv,avi} -o ./saida
+   
+   # Ou especifique múltiplos padrões:
+   resolver-converter -i "*.mp4 *.mkv" -o ./saida
+   ```
+
+4. **Selecionar faixas de áudio específicas**:
 
    ```bash
    resolver-converter -i video.mp4 -o ./saida -m 1,3
