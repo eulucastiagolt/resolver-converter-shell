@@ -50,6 +50,7 @@ resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
 | `-o, --output` | Diretório de saída para o(s) vídeo(s) convertido(s) |
 | `-r, --recursive` | Busca recursivamente em subdiretórios (preserva estrutura de diretórios) |
 | `-m, --map-audio` | Mapeia faixas de áudio específicas (ex: `1,3,5`) |
+| `-v, --version` | Mostra informações da versão                |
 | `-h, --help`   | Mostra a mensagem de ajuda                 |
 
 ### Exemplos de Uso

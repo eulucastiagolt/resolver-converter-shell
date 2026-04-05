@@ -1,8 +1,10 @@
 #!/bin/bash
 #By Lucas Tiago www.lucastiago.com.br
-#Version 0.6
+#Version 0.7
 #Script to convert video files to DaVinci Resolve compatible format.
 #FFmpeg is required for this script to work.
+
+VERSION="0.7"
 
 CANCELLED=0
 FFMPEG_PID=0
@@ -56,6 +58,12 @@ check_ffmpeg
 CODEC_DAVINCI=".mov"                                                       #Codec accepted by DaVinci Resolve on Linux
 PRESET_FFMPEG=(-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le -map 0:v -map 0:a) #FFmpeg preset
 
+show_version() {
+  echo "resolver-converter version $VERSION"
+  echo "By Lucas Tiago - www.lucastiago.com.br"
+  exit 0
+}
+
 show_help() {
   echo "Usage: resolver-converter [OPTIONS]"
   echo "Convert video files to DaVinci Resolve compatible format."
@@ -65,6 +73,7 @@ show_help() {
   echo "  -o, --output DIRECTORY  Output directory for converted file"
   echo "  -r, --recursive         Search recursively in subdirectories"
   echo "  -m, --map-audio TRACKS  Map specific audio tracks (comma-separated, e.g., 1,3,5)"
+  echo "  -v, --version           Show version information"
   echo "  -h, --help              Show this help message"
   echo ""
   echo "Examples:"
@@ -109,6 +118,9 @@ while [[ "$#" -gt 0 ]]; do
   -r | --recursive)
     ARG_RECURSIVE=1
     shift
+    ;;
+  -v | --version)
+    show_version
     ;;
   -h | --help)
     show_help

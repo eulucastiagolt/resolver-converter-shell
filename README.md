@@ -50,6 +50,7 @@ resolver-converter -i INPUT_FILE -o OUTPUT_DIRECTORY
 | `-o, --output`  | Output directory for converted video(s)      |
 | `-r, --recursive` | Search recursively in subdirectories (preserves directory structure) |
 | `-m, --map-audio` | Map specific audio tracks (e.g., `1,3,5`)    |
+| `-v, --version` | Show version information                     |
 | `-h, --help`    | Show help message                           |
 
 ### Usage Examples
