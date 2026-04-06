@@ -33,9 +33,15 @@ export function getRelativePath(absolutePath: string, baseDir: string): string {
   
   const rel = relative(normalizedBase, normalizedPath);
   
-  if (rel && rel !== '.' && !rel.startsWith('..')) {
-    return rel;
+  // Se for "." ou vazio, está no mesmo diretório - não cria subpasta
+  if (!rel || rel === '.') {
+    return '';
   }
   
-  return basename(dirname(absolutePath));
+  // Se começar com "..", saiu do diretório base - não cria subpasta
+  if (rel.startsWith('..')) {
+    return '';
+  }
+  
+  return rel;
 }

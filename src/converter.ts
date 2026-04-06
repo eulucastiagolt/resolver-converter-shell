@@ -104,7 +104,8 @@ export async function convertMultiple(options: ConvertOptions): Promise<ConvertR
       const fileDir = dirname(file);
       const relative = getRelativePath(fileDir, baseDir);
       
-      if (relative && relative !== '.' && relative !== fileDir) {
+      // Só cria subdiretório se houver um caminho relativo válido
+      if (relative) {
         currentOutputDir = join(output, relative);
       }
     }
