@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import cac from 'cac';
-import { convertMultiple, checkFfmpeg } from './converter';
-import type { ConvertOptions } from './types';
-import { setupSignalHandlers } from './utils/signal-handler';
+import { cac } from 'cac';
+import { convertMultiple, checkFfmpeg } from './converter.js';
+import type { ConvertOptions } from './types/index.js';
+import { setupSignalHandlers } from './utils/signal-handler.js';
 
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 export async function runCli(): Promise<void> {
   setupSignalHandlers();

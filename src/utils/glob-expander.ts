@@ -1,4 +1,4 @@
-import { glob } from 'fast-glob';
+import fg from 'fast-glob';
 import { isAbsolute, join, dirname, basename } from 'node:path';
 
 export async function expandGlobPattern(
@@ -17,14 +17,14 @@ export async function expandGlobPattern(
       const filePattern = basename(pattern);
       
       const recursivePattern = join(baseDir, '**', filePattern);
-      return await glob(recursivePattern, options);
+      return await fg(recursivePattern, options);
     } else {
       const recursivePattern = join('**', pattern);
-      return await glob(recursivePattern, options);
+      return await fg(recursivePattern, options);
     }
   }
 
-  return await glob(pattern, options);
+  return await fg(pattern, options);
 }
 
 export function getRelativePath(absolutePath: string, baseDir: string): string {

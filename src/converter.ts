@@ -1,11 +1,11 @@
 import ffmpeg from 'fluent-ffmpeg';
 import { existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import type { ConvertOptions, ConvertResult } from './types';
-import { generateOutputFilename } from './utils/file-validator';
-import { expandGlobPattern, getRelativePath } from './utils/glob-expander';
-import { removeTrailingSlash, getBaseDir } from './utils/path-utils';
-import { isProcessCancelled, setupSignalHandlers } from './utils/signal-handler';
+import type { ConvertOptions, ConvertResult } from './types/index.js';
+import { generateOutputFilename } from './utils/file-validator.js';
+import { expandGlobPattern, getRelativePath } from './utils/glob-expander.js';
+import { removeTrailingSlash, getBaseDir } from './utils/path-utils.js';
+import { isProcessCancelled, setupSignalHandlers } from './utils/signal-handler.js';
 
 const DEFAULT_CODEC = {
   video: 'mpeg4',

@@ -1,10 +1,10 @@
-export { convertVideo, convertMultiple, checkFfmpeg } from './converter';
+export { convertVideo, convertMultiple, checkFfmpeg } from './converter.js';
 export type {
   ConvertOptions,
   ConvertResult,
   FileInfo,
   FFmpegPreset,
-} from './types';
-export { expandGlobPattern } from './utils/glob-expander';
-export { isVideoFile, fileExists, generateOutputFilename } from './utils/file-validator';
-export { setupSignalHandlers, cancel, isProcessCancelled } from './utils/signal-handler';
+} from './types/index.js';
+export { expandGlobPattern } from './utils/glob-expander.js';
+export { isVideoFile, fileExists, generateOutputFilename } from './utils/file-validator.js';
+export { setupSignalHandlers, cancel, isProcessCancelled } from './utils/signal-handler.js';

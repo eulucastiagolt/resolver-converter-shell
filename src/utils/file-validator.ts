@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { basename, dirname, extname } from 'node:path';
-import type { FileInfo } from '../types';
+import type { FileInfo } from '../types/index.js';
 
 const VIDEO_EXTENSIONS = [
   '.mp4', '.avi', '.mkv', '.webm', '.mov', '.flv', '.mpeg', '.mpg', '.wmv', '.m4v', '.3gp', '.3g2'
