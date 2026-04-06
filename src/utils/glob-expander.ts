@@ -1,5 +1,5 @@
 import fg from 'fast-glob';
-import { isAbsolute, join, dirname, basename } from 'node:path';
+import { isAbsolute, join, dirname, basename, relative, normalize } from 'node:path';
 
 export async function expandGlobPattern(
   pattern: string,
@@ -28,14 +28,13 @@ export async function expandGlobPattern(
 }
 
 export function getRelativePath(absolutePath: string, baseDir: string): string {
-  if (!isAbsolute(absolutePath) || !isAbsolute(baseDir)) {
-    return absolutePath;
-  }
+  const normalizedPath = normalize(absolutePath);
+  const normalizedBase = normalize(baseDir);
   
-  const normalizedBase = baseDir.endsWith('/') ? baseDir : `${baseDir}/`;
+  const rel = relative(normalizedBase, normalizedPath);
   
-  if (absolutePath.startsWith(normalizedBase)) {
-    return absolutePath.slice(normalizedBase.length);
+  if (rel && rel !== '.' && !rel.startsWith('..')) {
+    return rel;
   }
   
   return basename(dirname(absolutePath));

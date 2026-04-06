@@ -74,7 +74,16 @@ export async function convertMultiple(options: ConvertOptions): Promise<ConvertR
 
   setupSignalHandlers();
 
-  const baseDir = recursive && input.includes('/') ? getBaseDir(input) : undefined;
+  let baseDir: string | undefined;
+  
+  if (recursive) {
+    if (input.includes('/')) {
+      baseDir = getBaseDir(input);
+    } else {
+      baseDir = process.cwd();
+    }
+  }
+
   const files = await expandGlobPattern(input, recursive);
 
   if (files.length === 0) {

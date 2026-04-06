@@ -1,10 +1,12 @@
 #!/usr/bin/env node
+import { createRequire } from 'node:module';
 import { cac } from 'cac';
 import { convertMultiple, checkFfmpeg } from './converter.js';
 import type { ConvertOptions } from './types/index.js';
 import { setupSignalHandlers } from './utils/signal-handler.js';
 
-const VERSION = '1.0.1';
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json');
 
 export async function runCli(): Promise<void> {
   setupSignalHandlers();
@@ -12,7 +14,7 @@ export async function runCli(): Promise<void> {
   const cli = cac('rconv');
 
   cli
-    .version(VERSION)
+    .version(version)
     .usage('rconv [options]')
     .help();
 
