@@ -7,4 +7,11 @@ export type {
 } from './types/index.js';
 export { expandGlobPattern } from './utils/glob-expander.js';
 export { isVideoFile, fileExists, generateOutputFilename } from './utils/file-validator.js';
-export { setupSignalHandlers, cancel, isProcessCancelled } from './utils/signal-handler.js';
+export { 
+  setupSignalHandlers, 
+  cancel, 
+  isProcessCancelled,
+  resetCancellation,
+  setCurrentCommand,
+  clearCurrentCommand
+} from './utils/signal-handler.js';

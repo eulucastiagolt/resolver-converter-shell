@@ -5,7 +5,12 @@ import type { ConvertOptions, ConvertResult } from './types/index.js';
 import { generateOutputFilename } from './utils/file-validator.js';
 import { expandGlobPattern, getRelativePath } from './utils/glob-expander.js';
 import { removeTrailingSlash, getBaseDir } from './utils/path-utils.js';
-import { isProcessCancelled, setupSignalHandlers } from './utils/signal-handler.js';
+import { 
+  isProcessCancelled, 
+  setupSignalHandlers, 
+  setCurrentCommand, 
+  clearCurrentCommand 
+} from './utils/signal-handler.js';
 
 const DEFAULT_CODEC = {
   video: 'mpeg4',
@@ -19,6 +24,12 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
 
   if (!existsSync(input)) {
     const error = new Error(`Input file not found: ${input}`);
+    onError?.(input, error);
+    return { input, output: '', success: false, error };
+  }
+
+  if (isProcessCancelled()) {
+    const error = new Error('Conversion cancelled');
     onError?.(input, error);
     return { input, output: '', success: false, error };
   }
@@ -52,16 +63,36 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
 
     command = command.outputOptions(['-q:v', String(DEFAULT_CODEC.quality)]);
 
+    // Registra o comando ativo para poder cancelar
+    setCurrentCommand(command);
+
     command
       .on('progress', (progress) => {
+        // Verifica cancelamento durante o progress
+        if (isProcessCancelled()) {
+          command.kill('SIGTERM');
+          return;
+        }
+        
         const percent = progress.percent || 0;
         onProgress?.(percent, input);
       })
       .on('end', () => {
+        clearCurrentCommand();
         onComplete?.(input);
         resolve({ input, output: outputPath, success: true });
       })
       .on('error', (err) => {
+        clearCurrentCommand();
+        
+        // Se foi cancelado, retorna erro específico
+        if (isProcessCancelled()) {
+          const cancelError = new Error('Conversion cancelled');
+          onError?.(input, cancelError);
+          resolve({ input, output: outputPath, success: false, error: cancelError });
+          return;
+        }
+        
         onError?.(input, err);
         resolve({ input, output: outputPath, success: false, error: err });
       })
