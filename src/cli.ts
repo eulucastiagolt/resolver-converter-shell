@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import cac from 'cac';
 import { convertMultiple, checkFfmpeg } from './converter';
 import type { ConvertOptions } from './types';
