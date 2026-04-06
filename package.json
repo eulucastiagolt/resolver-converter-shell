@@ -1,0 +1,66 @@
+{
+  "name": "@ltcode/rconv",
+  "version": "1.0.0",
+  "description": "CLI and library for converting videos to DaVinci Resolve compatible format",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "rconv": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun build ./src/index.ts ./src/cli.ts --outdir ./dist --target bun",
+    "build:node": "tsc",
+    "dev": "bun run src/cli.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build:node"
+  },
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
+    "fast-glob": "^3.3.2",
+    "cac": "^6.7.14",
+    "file-type": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.21",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "bun-types": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "davinci",
+    "resolve",
+    "video",
+    "converter",
+    "ffmpeg",
+    "cli",
+    "rconv"
+  ],
+  "author": "Lucas Tiago <eulucastiagolt>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eulucastiagolt/resolver-converter-shell.git"
+  },
+  "homepage": "https://github.com/eulucastiagolt/resolver-converter-shell#readme",
+  "bugs": {
+    "url": "https://github.com/eulucastiagolt/resolver-converter-shell/issues"
+  }
+}

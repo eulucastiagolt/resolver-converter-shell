@@ -1,71 +1,35 @@
-# Arquivos de sistema operacional
-.DS_Store
-Thumbs.db
-
-# Arquivos de ambiente
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Dependências do Node.js
+# Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Build output
 dist/
-build/
-out/
-.next/
 
 # Logs
-logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+bun-debug.log
 
-# Editor directories and files
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Editor
 .idea/
 .vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Arquivos temporários
 *.swp
-*~
+*.swo
+
+# Bun
+bun.lockb
+
+# Test output
+coverage/
+
+# Temp
+*.tmp
+*.temp
 .~*
-
-# Arquivos de configuração local
-*.local
-
-# Arquivos de cache
-.cache/
-.parcel-cache/

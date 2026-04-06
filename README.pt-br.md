@@ -1,181 +1,181 @@
-# Resolver Converter
+# @ltcode/rconv
 
-[![en](https://img.shields.io/badge/lang%20-%20en%20-%20%23651215?style=flat&logo=immersivetranslate&logoColor=%23ffffff&labelColor=%23F54B3E)](https://github.com/eulucastiagolt/resolver-converter-shell/blob/main/README.md)
+[![npm version](https://img.shields.io/npm/v/@ltcode/rconv.svg)](https://www.npmjs.com/package/@ltcode/rconv)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Ferramenta de linha de comando para conversão de vídeos para o formato compatível com o DaVinci Resolve, projetada para resolver problemas de compatibilidade de vídeo ao usar o DaVinci Resolve em sistemas Linux.
+CLI e biblioteca para converter vídeos para formato compatível com DaVinci Resolve. Funciona com Bun e Node.js.
 
-## 📋 Requisitos
+## Funcionalidades
 
-- Bash (GNU Bash 4.0 ou superior)
-- FFmpeg (para conversão de vídeo)
+- Converte vídeos para `.mov` (MPEG-4 + PCM audio) compatível com DaVinci Resolve
+- Suporte a wildcards e padrões glob (`*.mp4`, `*.mkv`)
+- Busca recursiva em diretórios com preservação de estrutura
+- Seleção de faixas de áudio específicas
+- Ctrl+C cancela todas as conversões
+- Funciona como CLI e biblioteca
 
-## 🚀 Instalação
+## Instalação
 
-### Método 1: Instalação Rápida (Recomendado)
+### Via npm
 
-Execute o comando abaixo para instalar ou atualizar:
+```bash
+npm install -g @ltcode/rconv
+```
+
+### Via Bun
+
+```bash
+bun install -g @ltcode/rconv
+```
+
+### Shell Script (Legacy)
+
+Para usuários que preferem o script shell original:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/install.sh | bash
 ```
 
-### Método 2: Instalação Manual
+Veja [legacy/README-legacy.pt-br.md](legacy/README-legacy.pt-br.md) para detalhes.
 
-1. Baixe o script:
+## Uso via CLI
 
-    ```bash
-    curl -O https://raw.githubusercontent.com/eulucastiagolt/resolver-converter-shell/main/resolver-converter.sh
-    chmod +x resolver-converter.sh
-    ```
-
-2. (Opcional) Instale globalmente:
-
-    ```bash
-    sudo mv resolver-converter.sh /usr/local/bin/resolver-converter
-    ```
-
-## 🛠 Como Usar
-
-### Sintaxe Básica
+### Sintaxe básica
 
 ```bash
-resolver-converter -i ARQUIVO_ENTRADA -o DIRETORIO_SAIDA
+rconv -i <entrada> -o <saída>
 ```
 
 ### Opções
 
-| Opção          | Descrição                                  |
-| -------------- | ------------------------------------------ |
-| `-i, --input`  | Arquivo de vídeo ou padrão (aceita wildcards como `*.mp4`, `*.{mp4,mkv}`) |
-| `-o, --output` | Diretório de saída para o(s) vídeo(s) convertido(s) |
-| `-r, --recursive` | Busca recursivamente em subdiretórios (preserva estrutura de diretórios) |
-| `-m, --map-audio` | Mapeia faixas de áudio específicas (ex: `1,3,5`) |
-| `-v, --version` | Mostra informações da versão                |
-| `-h, --help`   | Mostra a mensagem de ajuda                 |
-
-### Exemplos de Uso
-
-1. **Converter um único arquivo**:
-
-   ```bash
-   resolver-converter -i "meu video.mp4" -o ./saida
-   ```
-
-2. **Converter múltiplos arquivos com wildcard**:
-
-   ```bash
-   # Com aspas (o script expande internamente):
-   resolver-converter -i "*.mp4" -o ./videos_convertidos
-   
-   # Sem aspas (o shell expande antes de passar ao script):
-   resolver-converter -i *.mp4 -o ./videos_convertidos
-   ```
-
-3. **Converter múltiplos formatos com brace expansion**:
-
-   ```bash
-   # Brace expansion requer que o padrão seja passado SEM aspas:
-   resolver-converter -i *.{mp4,mkv,avi} -o ./saida
-   
-   # Ou especifique múltiplos padrões:
-   resolver-converter -i "*.mp4 *.mkv" -o ./saida
-   ```
-
-4. **Converter arquivos recursivamente em subdiretórios**:
-
-   ```bash
-   # Busca todos os arquivos .mkv no diretório atual e subdiretórios
-   # Preserva a estrutura de diretórios na saída
-   resolver-converter -r -i "*.mkv" -o ./saida
-   
-   # Exemplo: ./videos/subdir/video.mkv -> ./saida/videos/subdir/video.mov
-   ```
-
-5. **Selecionar faixas de áudio específicas**:
-
-   ```bash
-   resolver-converter -i video.mp4 -o ./saida -m 1,3
-   ```
-
-   Este comando irá incluir apenas as faixas de áudio 1 e 3 no arquivo de saída.
-
-4. **Arquivos com espaços no nome**:
-
-   ```bash
-   resolver-converter -i "meu video com espacos.mkv" -o ./saida
-   ```
-
-5. **Arquivos com múltiplos pontos no nome**:
-
-   ```bash
-   resolver-converter -i "video.2023.10.18.final.mp4" -o ./saida
-   ```
-
-   Será convertido para: `video.2023.10.18.final.mov`
-
-### Características
-
-- Suporte a múltiplos formatos de vídeo de entrada
-- Preserva nomes de arquivo complexos com múltiplos pontos
-- Tratamento adequado de espaços em nomes de arquivo
-- Cria automaticamente o diretório de saída se não existir
-- Feedback detalhado durante o processo de conversão
-- Suporte a seleção de faixas de áudio específicas
-- Verificação automática de dependências (FFmpeg)
-- Instalação global simplificada
+| Opção | Descrição |
+|-------|-----------|
+| `-i, --input <padrão>` | Arquivo de vídeo ou padrão (ex: `*.mp4`, `*.mkv`) |
+| `-o, --output <dir>` | Diretório de saída para arquivos convertidos |
+| `-r, --recursive` | Busca recursiva em subdiretórios (preserva estrutura) |
+| `-m, --map-audio <faixas>` | Mapeia faixas de áudio específicas (separadas por vírgula, ex: `1,3,5`) |
+| `-v, --version` | Mostra versão |
+| `-h, --help` | Mostra ajuda |
 
 ### Exemplos
 
-1. Converter um único arquivo:
-
-    ```bash
-    # Se instalado globalmente:
-    resolver-converter -i video.mp4 -o ./saida
-
-    # Se estiver usando localmente:
-    ./resolver-converter.sh -i video.mp4 -o ./saida
-    ```
-
-2. Converter todos os arquivos de um diretório:
-
-    ```bash
-    # Converter todos os arquivos .mp4 do diretório:
-    resolver-converter -i *.mp4 -o ./saida
-
-    # Especificar múltiplos arquivos:
-    resolver-converter -i "video1.mp4 video2.mp4 video3.mp4" -o ./saida
-
-    # Usar curinga em subdiretórios:
-    resolver-converter -i "./**/*.mp4" -o ./saida
-    ```
-
-3. Usar caminhos absolutos:
-
-    ```bash
-    resolver-converter --input /caminho/do/video.avi --output /caminho/da/saida
-    ```
-
-## 🔄 Formatos Suportados
-
-O script usa o FFmpeg para conversão, então qualquer formato de vídeo suportado pelo FFmpeg pode ser usado como entrada. A saída será no formato `.mov` com codec MPEG-4 e áudio PCM, que é amplamente compatível com o DaVinci Resolve.
-
-## ❓ Ajuda
-
-Para ver todas as opções disponíveis:
-
 ```bash
-resolver-converter --help
+# Converter um único arquivo
+rconv -i video.mp4 -o ./saida
+
+# Converter múltiplos arquivos com wildcard
+rconv -i "*.mp4" -o ./convertidos
+
+# Converter recursivamente em subdiretórios
+rconv -r -i "*.mkv" -o ./saida
+
+# Selecionar faixas de áudio específicas
+rconv -i video.mp4 -o ./saida -m 1,3
+
+# Usar brace expansion (sem aspas)
+rconv -i *.{mp4,mkv,avi} -o ./saida
 ```
 
-## 📝 Notas
+## Uso como Biblioteca
 
-- O script criará automaticamente o diretório de saída se ele não existir.
-- Se ocorrer algum erro durante a conversão, uma mensagem será exibida indicando o problema.
+### Instalar como dependência
 
-## 📄 Licença
+```bash
+npm install @ltcode/rconv
+# ou
+bun add @ltcode/rconv
+```
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+### API
 
----
+```typescript
+import { convertVideo, convertMultiple } from '@ltcode/rconv';
 
-Desenvolvido por [Lucas Tiago](https://github.com/eulucastiagolt) | [www.lucastiago.com.br](https://www.lucastiago.com.br)
+// Converter um único vídeo
+const result = await convertVideo({
+  input: 'video.mp4',
+  output: './saida',
+  audioTracks: [1, 3], // opcional
+});
+
+console.log(result.success); // true ou false
+
+// Converter múltiplos vídeos
+const results = await convertMultiple({
+  input: '*.mp4',
+  output: './convertidos',
+  recursive: true, // opcional
+  onProgress: (percent, file) => {
+    console.log(`${file}: ${percent}%`);
+  },
+  onComplete: (file) => {
+    console.log(`Concluído: ${file}`);
+  },
+  onError: (file, error) => {
+    console.error(`Erro: ${file} - ${error.message}`);
+  },
+});
+
+// Verificar se FFmpeg está disponível
+import { checkFfmpeg } from '@ltcode/rconv';
+
+if (!checkFfmpeg()) {
+  console.error('FFmpeg não encontrado');
+}
+```
+
+### Tipos
+
+```typescript
+import type { ConvertOptions, ConvertResult } from '@ltcode/rconv';
+
+interface ConvertOptions {
+  input: string;
+  output: string;
+  recursive?: boolean;
+  audioTracks?: number[];
+  onProgress?: (percent: number, file: string) => void;
+  onStart?: (file: string) => void;
+  onComplete?: (file: string) => void;
+  onError?: (file: string, error: Error) => void;
+}
+
+interface ConvertResult {
+  input: string;
+  output: string;
+  success: boolean;
+  error?: Error;
+}
+```
+
+## Requisitos
+
+- FFmpeg deve estar instalado e disponível no PATH
+
+### Instalar FFmpeg
+
+```bash
+# Ubuntu/Debian
+sudo apt install ffmpeg
+
+# Fedora
+sudo dnf install ffmpeg
+
+# Arch Linux
+sudo pacman -S ffmpeg
+
+# macOS
+brew install ffmpeg
+```
+
+## Formatos Suportados
+
+Qualquer formato suportado pelo FFmpeg pode ser usado como entrada. A saída é `.mov` com codec MPEG-4 e áudio PCM, amplamente compatível com DaVinci Resolve no Linux.
+
+## Licença
+
+MIT - Veja [LICENSE](LICENSE) para detalhes.
+
+## Autor
+
+Lucas Tiago - [GitHub](https://github.com/eulucastiagolt) - [Website](https://www.lucastiago.com.br)
