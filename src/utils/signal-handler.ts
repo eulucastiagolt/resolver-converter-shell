@@ -2,6 +2,7 @@ import type { FfmpegCommand } from 'fluent-ffmpeg';
 
 let isCancelled = false;
 let currentCommand: FfmpegCommand | null = null;
+let signalHandler: (() => void) | undefined;
 
 export function cancel(): void {
   isCancelled = true;
@@ -35,18 +36,26 @@ export function clearCurrentCommand(): void {
 }
 
 export function setupSignalHandlers(): void {
-  const handler = () => {
+  if (signalHandler) {
+    return;
+  }
+
+  signalHandler = () => {
     console.log('');
     console.log('Cancellation requested. Stopping all conversions...');
     cancel();
-    process.exit(1);
   };
 
-  process.on('SIGINT', handler);
-  process.on('SIGTERM', handler);
+  process.on('SIGINT', signalHandler);
+  process.on('SIGTERM', signalHandler);
 }
 
 export function removeSignalHandlers(): void {
-  process.removeAllListeners('SIGINT');
-  process.removeAllListeners('SIGTERM');
+  if (!signalHandler) {
+    return;
+  }
+
+  process.off('SIGINT', signalHandler);
+  process.off('SIGTERM', signalHandler);
+  signalHandler = undefined;
 }

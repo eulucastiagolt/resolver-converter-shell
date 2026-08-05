@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { cac } from 'cac';
 import { convertMultiple, checkFfmpeg } from './converter.js';
 import type { ConvertOptions } from './types/index.js';
-import { setupSignalHandlers } from './utils/signal-handler.js';
+import { isProcessCancelled, setupSignalHandlers } from './utils/signal-handler.js';
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json');
@@ -91,6 +91,11 @@ export async function runCli(): Promise<void> {
   console.log('');
   console.log('=================================');
   console.log(`Completed: ${successful.length} files converted successfully`);
+
+  if (isProcessCancelled()) {
+    console.log('Conversion cancelled');
+    process.exit(1);
+  }
   
   if (failed.length > 0) {
     console.log(`Failed: ${failed.length} files failed to convert`);
