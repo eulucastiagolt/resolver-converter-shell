@@ -57,6 +57,14 @@ rconv -i <input> -o <output>
 | `-v, --version` | Show version |
 | `-h, --help` | Show help |
 
+### Interactive Control Center
+
+```bash
+rconv tui
+```
+
+The TUI starts in the current directory and provides a media browser, output folder creation, audio track selection, conversion progress, execution logs and cancellation controls. Use the arrow keys to navigate, `Enter` to select, `P` to type a directory path, and `N` to create a named output folder.
+
 ### Examples
 
 ```bash

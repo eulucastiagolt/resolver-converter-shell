@@ -2,7 +2,7 @@ import ffmpeg from 'fluent-ffmpeg';
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import type { ConvertOptions, ConvertResult } from './types/index.js';
+import type { AudioTrack, ConvertOptions, ConvertResult } from './types/index.js';
 import { generateOutputFilename } from './utils/file-validator.js';
 import { expandGlobPattern, getRelativePath } from './utils/glob-expander.js';
 import { removeTrailingSlash, getBaseDir } from './utils/path-utils.js';
@@ -116,9 +116,22 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
 }
 
 export async function convertMultiple(options: ConvertOptions): Promise<ConvertResult[]> {
-  const { input, output, recursive, audioTracks, onProgress, onStart, onComplete, onError } = options;
+  const {
+    input,
+    output,
+    recursive,
+    audioTracks,
+    onProgress,
+    onStart,
+    onComplete,
+    onError,
+    onQueue,
+    manageSignals = true,
+  } = options;
 
-  setupSignalHandlers();
+  if (manageSignals) {
+    setupSignalHandlers();
+  }
 
   let baseDir: string | undefined;
   
@@ -139,6 +152,8 @@ export async function convertMultiple(options: ConvertOptions): Promise<ConvertR
     onError?.(input, error);
     return [{ input, output: '', success: false, error }];
   }
+
+  onQueue?.(files);
 
   const results: ConvertResult[] = [];
 
@@ -177,6 +192,26 @@ export async function convertMultiple(options: ConvertOptions): Promise<ConvertR
   }
 
   return results;
+}
+
+export function getAudioTracks(input: string): Promise<AudioTrack[]> {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(input, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve(data.streams
+        .filter((stream) => stream.codec_type === 'audio')
+        .map((stream) => ({
+          index: stream.index,
+          codec: stream.codec_name ?? 'unknown',
+          channels: stream.channels,
+          language: typeof stream.tags?.language === 'string' ? stream.tags.language : undefined,
+        })));
+    });
+  });
 }
 
 export function checkFfmpeg(): boolean {

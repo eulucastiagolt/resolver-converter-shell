@@ -4,13 +4,12 @@ import { cac } from 'cac';
 import { convertMultiple, checkFfmpeg } from './converter.js';
 import type { ConvertOptions } from './types/index.js';
 import { isProcessCancelled, setupSignalHandlers } from './utils/signal-handler.js';
+import { runTui } from './tui/index.js';
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json');
 
 export async function runCli(): Promise<void> {
-  setupSignalHandlers();
-
   const cli = cac('rconv');
 
   cli
@@ -24,7 +23,16 @@ export async function runCli(): Promise<void> {
     .option('-r, --recursive', 'Search recursively in subdirectories')
     .option('-m, --map-audio <tracks>', 'Map specific audio tracks (comma-separated, e.g., 1,3,5)');
 
-  const { options } = cli.parse();
+  cli.command('tui', 'Open the interactive rconv control panel');
+
+  const { options } = cli.parse(process.argv, { run: false });
+
+  if (cli.matchedCommandName === 'tui') {
+    await runTui();
+    return;
+  }
+
+  setupSignalHandlers();
 
   if (!options.input || !options.output) {
     if (options.help || options.version) {

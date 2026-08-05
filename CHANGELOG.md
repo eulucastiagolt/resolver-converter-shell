@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-08-05
+
+### Added
+- Interactive `rconv tui` control center with media browser, configurable output folders, audio track selection, progress and execution logs
+- Directory path autocomplete and named output folder creation in the TUI
+- TUI controls for starting and cancelling conversions
+- Library callbacks for queue discovery and optional signal management
+
+### Fixed
+- FFmpeg availability check and actionable conversion errors
+- Signal handlers no longer terminate library consumers directly
+
 ## [1.0.0] - 2024-04-05
 
 ### Added

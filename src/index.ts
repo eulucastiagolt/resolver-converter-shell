@@ -1,7 +1,8 @@
-export { convertVideo, convertMultiple, checkFfmpeg } from './converter.js';
+export { convertVideo, convertMultiple, checkFfmpeg, getAudioTracks } from './converter.js';
 export type {
   ConvertOptions,
   ConvertResult,
+  AudioTrack,
   FileInfo,
   FFmpegPreset,
 } from './types/index.js';

@@ -7,6 +7,8 @@ export interface ConvertOptions {
   onStart?: (file: string) => void;
   onComplete?: (file: string) => void;
   onError?: (file: string, error: Error) => void;
+  onQueue?: (files: string[]) => void;
+  manageSignals?: boolean;
 }
 
 export interface ConvertResult {
@@ -14,6 +16,13 @@ export interface ConvertResult {
   output: string;
   success: boolean;
   error?: Error;
+}
+
+export interface AudioTrack {
+  index: number;
+  codec: string;
+  channels?: number;
+  language?: string;
 }
 
 export interface FileInfo {

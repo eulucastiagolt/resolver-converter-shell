@@ -57,6 +57,14 @@ rconv -i <entrada> -o <saída>
 | `-v, --version` | Mostra versão |
 | `-h, --help` | Mostra ajuda |
 
+### Central de Controle Interativa
+
+```bash
+rconv tui
+```
+
+A TUI inicia no diretório atual e oferece navegador de mídia, criação de pasta de saída, seleção de faixas de áudio, progresso, logs e cancelamento. Use as setas para navegar, `Enter` para selecionar, `P` para digitar um caminho e `N` para criar uma pasta com nome.
+
 ### Exemplos
 
 ```bash
