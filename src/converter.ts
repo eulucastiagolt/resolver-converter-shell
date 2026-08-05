@@ -1,4 +1,5 @@
 import ffmpeg from 'fluent-ffmpeg';
+import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import type { ConvertOptions, ConvertResult } from './types/index.js';
@@ -47,6 +48,7 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
 
   return new Promise<ConvertResult>((resolve) => {
     let command = ffmpeg(input);
+    let commandLine = '';
 
     command = command
       .videoCodec(DEFAULT_CODEC.video)
@@ -67,6 +69,9 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
     setCurrentCommand(command);
 
     command
+      .on('start', (line) => {
+        commandLine = line;
+      })
       .on('progress', (progress) => {
         // Verifica cancelamento durante o progress
         if (isProcessCancelled()) {
@@ -82,7 +87,7 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
         onComplete?.(input);
         resolve({ input, output: outputPath, success: true });
       })
-      .on('error', (err) => {
+      .on('error', (err, _stdout, stderr) => {
         clearCurrentCommand();
         
         // Se foi cancelado, retorna erro específico
@@ -93,8 +98,18 @@ export async function convertVideo(options: ConvertOptions): Promise<ConvertResu
           return;
         }
         
-        onError?.(input, err);
-        resolve({ input, output: outputPath, success: false, error: err });
+        const stderrTail = stderr?.trim().split('\n')
+          .filter((line) => /error|failed|invalid|matches no streams|not found/i.test(line))
+          .slice(-6)
+          .join('\n');
+        const details = [
+          err.message,
+          commandLine ? `Command: ${commandLine}` : '',
+          stderrTail ? `FFmpeg details:\n${stderrTail}` : '',
+        ].filter(Boolean).join('\n');
+        const error = new Error(details);
+        onError?.(input, error);
+        resolve({ input, output: outputPath, success: false, error });
       })
       .save(outputPath);
   });
@@ -118,7 +133,10 @@ export async function convertMultiple(options: ConvertOptions): Promise<ConvertR
   const files = await expandGlobPattern(input, recursive);
 
   if (files.length === 0) {
-    const error = new Error(`No files found matching pattern: ${input}`);
+    const error = new Error(
+      `No files found matching pattern: ${input}\nWorking directory: ${process.cwd()}\nCheck the path and the file extension. Linux distinguishes .mp4 from .MP4.`
+    );
+    onError?.(input, error);
     return [{ input, output: '', success: false, error }];
   }
 
@@ -162,5 +180,6 @@ export async function convertMultiple(options: ConvertOptions): Promise<ConvertR
 }
 
 export function checkFfmpeg(): boolean {
-  return true;
+  const result = spawnSync('ffmpeg', ['-version'], { stdio: 'ignore' });
+  return !result.error && result.status === 0;
 }

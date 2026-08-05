@@ -48,8 +48,13 @@ export async function runCli(): Promise<void> {
   }
 
   const audioTracks = options.mapAudio
-    ? (options.mapAudio as string).split(',').map((t) => parseInt(t.trim(), 10))
+    ? String(options.mapAudio).split(',').map((track) => Number(track.trim()))
     : undefined;
+
+  if (audioTracks?.some((track) => !Number.isInteger(track) || track < 0)) {
+    console.error('Error: --map-audio must contain non-negative integer stream indices, for example: 1,3,5');
+    process.exit(1);
+  }
 
   const convertOptions: ConvertOptions = {
     input: options.input as string,
@@ -69,7 +74,8 @@ export async function runCli(): Promise<void> {
       console.log(`✓ Conversion of ${file} completed successfully!`);
     },
     onError: (file, error) => {
-      console.error(`✗ Error converting ${file}: ${error.message}`);
+      console.error(`✗ Error converting ${file}:`);
+      console.error(error.message);
     },
   };
 
