@@ -1,13 +1,13 @@
 {
   "name": "@ltcode/rconv",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CLI and library for converting videos to DaVinci Resolve compatible format",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "rconv": "./dist/cli.js"
+    "rconv": "dist/cli.js"
   },
   "exports": {
     ".": {
@@ -59,10 +59,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eulucastiagolt/resolver-converter-shell.git"
+    "url": "git+https://github.com/ltcodedev/rconv.git"
   },
-  "homepage": "https://github.com/eulucastiagolt/resolver-converter-shell#readme",
+  "homepage": "https://github.com/ltcodedev/rconv#readme",
   "bugs": {
-    "url": "https://github.com/eulucastiagolt/resolver-converter-shell/issues"
+    "url": "https://github.com/ltcodedev/rconv/issues"
   }
 }

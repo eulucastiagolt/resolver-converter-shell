@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-08-05
+
+### Fixed
+- Publish metadata now points to the `ltcodedev/rconv` repository
+- Normalize the npm binary entry for the `rconv` command
+
 ## [1.1.0] - 2026-08-05
 
 ### Added
