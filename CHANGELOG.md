@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2026-08-05
+
+### Fixed
+- Run the global CLI with Bun so the OpenTUI native renderer is available after npm installation
+
 ## [1.1.3] - 2026-08-05
 
 ### Fixed

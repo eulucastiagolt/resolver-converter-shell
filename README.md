@@ -18,7 +18,7 @@ CLI and library for converting videos to DaVinci Resolve compatible format. Work
 
 ### Via npm
 
-The package is published in the npm registry. This is the recommended global installation method:
+The package is published in the npm registry. This is the recommended global installation method. The interactive TUI requires Bun 1.3 or later at runtime:
 
 ```bash
 npm install -g @ltcode/rconv

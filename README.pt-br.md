@@ -18,7 +18,7 @@ CLI e biblioteca para converter vídeos para formato compatível com DaVinci Res
 
 ### Via npm
 
-O pacote é publicado no registro npm. Este é o método recomendado para instalação global:
+O pacote é publicado no registro npm. Este é o método recomendado para instalação global. A TUI interativa requer Bun 1.3 ou superior em tempo de execução:
 
 ```bash
 npm install -g @ltcode/rconv
