@@ -18,6 +18,8 @@ CLI and library for converting videos to DaVinci Resolve compatible format. Work
 
 ### Via npm
 
+The package is published in the npm registry. This is the recommended global installation method:
+
 ```bash
 npm install -g @ltcode/rconv
 ```
@@ -26,6 +28,14 @@ npm install -g @ltcode/rconv
 
 ```bash
 bun install -g @ltcode/rconv
+```
+
+### Updates
+
+`rconv` checks the npm registry once per day and notifies you when a newer version is available. Update with:
+
+```bash
+npm install -g @ltcode/rconv@latest
 ```
 
 ### Legacy Shell Script

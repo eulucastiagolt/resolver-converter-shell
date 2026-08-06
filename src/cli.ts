@@ -5,6 +5,7 @@ import { convertMultiple, checkFfmpeg } from './converter.js';
 import type { ConvertOptions } from './types/index.js';
 import { isProcessCancelled, setupSignalHandlers } from './utils/signal-handler.js';
 import { runTui } from './tui/index.js';
+import { checkForUpdate, formatUpdateMessage } from './utils/update-checker.js';
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json');
@@ -28,6 +29,10 @@ export async function runCli(): Promise<void> {
   const { options } = cli.parse(process.argv, { run: false });
 
   if (cli.matchedCommandName === 'tui') {
+    const latestVersion = await checkForUpdate(version);
+    if (latestVersion) {
+      console.warn(formatUpdateMessage(version, latestVersion));
+    }
     await runTui();
     return;
   }
@@ -53,6 +58,11 @@ export async function runCli(): Promise<void> {
     console.error('  Arch Linux: sudo pacman -S ffmpeg');
     console.error('  macOS: brew install ffmpeg');
     process.exit(1);
+  }
+
+  const latestVersion = await checkForUpdate(version);
+  if (latestVersion) {
+    console.warn(formatUpdateMessage(version, latestVersion));
   }
 
   const audioTracks = options.mapAudio

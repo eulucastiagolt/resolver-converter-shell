@@ -18,6 +18,8 @@ CLI e biblioteca para converter vídeos para formato compatível com DaVinci Res
 
 ### Via npm
 
+O pacote é publicado no registro npm. Este é o método recomendado para instalação global:
+
 ```bash
 npm install -g @ltcode/rconv
 ```
@@ -26,6 +28,14 @@ npm install -g @ltcode/rconv
 
 ```bash
 bun install -g @ltcode/rconv
+```
+
+### Atualizações
+
+O `rconv` consulta o registro npm uma vez por dia e avisa quando existir uma versão nova. Para atualizar:
+
+```bash
+npm install -g @ltcode/rconv@latest
 ```
 
 ### Shell Script (Legacy)

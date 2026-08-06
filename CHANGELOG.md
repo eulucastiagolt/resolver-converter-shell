@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2026-08-05
+
+### Added
+- Daily npm update notification with a cached registry check
+
+### Changed
+- Recommend npm as the primary global installation method
+
 ## [1.1.1] - 2026-08-05
 
 ### Fixed
